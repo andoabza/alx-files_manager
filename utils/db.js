@@ -15,15 +15,27 @@ class DBClient {
   }
 
   async nbUsers() {
-    const collection = await this.client.db.collection('users');
-    const count = await collection.countDocuments();
-    return count;
+  return new Promise((resolve, reject) => {
+    this.client.db.collection('users').countDocuments({}, (err, count) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(count);
+      }
+    });
+  });  
   }
 
   async nbFiles() {
-    const collection = await this.client.db.collection('files');
-    const count = await collection.countDocuments();
-    return count;
+  return new Promise((resolve, reject) => {
+    this.client.db.collection('files').countDocuments({}, (err, count) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(count);
+      }
+    });
+  });
   }
 }
 

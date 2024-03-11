@@ -8,7 +8,6 @@ class RedisClient {
       console.log(`Redis client not connected to the server: ${err}`);
     });
     this.client.connected = true;
-
   }
 
   isAlive() {
@@ -50,6 +49,6 @@ class RedisClient {
       });
     });
   }
-  }
+}
 const redisClient = new RedisClient();
 export default redisClient;
