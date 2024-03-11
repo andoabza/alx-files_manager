@@ -2,11 +2,7 @@ import { createClient } from 'redis';
 
 class RedisClient {
   constructor() {
-    this.client = createClient({
-      host: 'redis-10391.c256.us-east-1-2.ec2.cloud.redislabs.com',
-      port: 10391,
-      password: 'pJwzUNNGws2xDdnggb6XNPonV1YITN6t',
-    });
+    this.client = createClient({});
 
     this.client.on('error', (err) => {
       console.log(`Redis client not connected to the server: ${err}`);

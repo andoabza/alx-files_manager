@@ -6,9 +6,8 @@ const dbName = process.env.DB_NAME || 'files_manager';
 
 class DBClient {
   constructor() {
-    //this.client = new MongoClient(`mongodb://${host}:${port}/`, { useUnifiedTopology: true }).connect();
-    this.client = new MongoClient("cluster0.m0zp7jh.mongodb.net", {useUnifiedTopology: true});
-    //this.client.db('dbName');
+    this.client = new MongoClient(`mongodb://${host}:${port}/`, { useUnifiedTopology: true }).connect();
+    this.client.db(dbName);
   }
 
   isAlive() {
@@ -16,13 +15,13 @@ class DBClient {
   }
 
   async nbUsers() {
-    const collection = this.client.db.collection('users');
+    const collection = await this.client.db.collection('users');
     const count = await collection.countDocuments();
     return count;
   }
 
   async nbFiles() {
-    const collection = this.client.db.collection('files');
+    const collection = await this.client.db.collection('files');
     const count = await collection.countDocuments();
     return count;
   }
