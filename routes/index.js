@@ -1,10 +1,9 @@
+// import { express } from 'express';
 import { Router } from 'express';
-import appController from '../controllers/AppController';
+import { getStats, getStatus } from '../controllers/AppController.js';
 
-const router = Router();
+export const router = Router();
 
-router.get('/status', appController.getStatus());
+router.get('/status', getStatus());
 
-router.get('/stats', appController.getStats());
-
-module.exports = router;
+router.get('/stats', getStats());

@@ -1,7 +1,7 @@
-import redisClient from './utils/redis';
-import dbClient from './utils/db';
+import { redisClient } from '../utils/redis.js';
+import { dbClient } from '../utils/db.js';
 
-exports.getStatus = async (req, res) => {
+export const getStatus = async (req, res) => {
  try {
     const redisStatus = await redisClient.isRedisAlive();
     const dbStatus = await dbClient.isDbAlive();
@@ -11,7 +11,7 @@ exports.getStatus = async (req, res) => {
  }
 };
 
-exports.getStats = async (req, res) => {
+export const getStats = async (req, res) => {
  try {
     const usersCount = await dbClient.countUsers();
     const filesCount = await dbClient.countFiles();
