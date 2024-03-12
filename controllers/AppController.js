@@ -1,7 +1,7 @@
-import { redisClient } from '../utils/redis.js';
-import { dbClient } from '../utils/db.js';
+import { redisClient } from '../utils/redis';
+import { dbClient } from '../utils/db';
 
-export const getStatus = async (req, res) => {
+const getStatus = async (req, res) => {
  try {
     const redisStatus = await redisClient.isRedisAlive();
     const dbStatus = await dbClient.isDbAlive();
@@ -11,7 +11,7 @@ export const getStatus = async (req, res) => {
  }
 };
 
-export const getStats = async (req, res) => {
+const getStats = async (req, res) => {
  try {
     const usersCount = await dbClient.countUsers();
     const filesCount = await dbClient.countFiles();
@@ -20,3 +20,5 @@ export const getStats = async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
  }
 };
+
+export default { getStatus, getStats };
