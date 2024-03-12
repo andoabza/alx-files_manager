@@ -1,10 +1,7 @@
-import { Router } from 'express';
-import { getStats, getStatus } from '../controllers/AppController';
+import { Express } from 'express';
+import AppController from '../controllers/AppController';
 
-const router = Router();
-
-router.get('/status', getStatus());
-
-router.get('/stats', getStats());
-
-export default router;
+const injectRoutes = (api) => {
+    api.get('/status', AppController.getStatus);
+    api.get('/stats', AppController.getStats);
+}
