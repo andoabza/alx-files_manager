@@ -1,20 +1,40 @@
 /* eslint-disable import/no-named-as-default */
-import { v4 as uuidv4 } from 'uuid';
-import redisClient from '../utils/redis';
+import sha1 from 'sha1';
+import Queue from 'bull/lib/queue';
+import dbClient from '../utils/db';
 
-export default class AuthController {
-  static async getConnect(req, res) {
-    const { user } = req;
-    const token = uuidv4();
+const userQueue = new Queue('email sending');
 
-    await redisClient.set(`auth_${token}`, user._id.toString(), 24 * 60 * 60);
-    res.status(200).json({ token });
+export default class UsersController {
+  static async postNew(req, res) {
+    const email = req.body ? req.body.email : null;
+    const password = req.body ? req.body.password : null;
+
+    if (!email) {
+      res.status(400).json({ error: 'Missing email' });
+      return;
+    }
+    if (!password) {
+      res.status(400).json({ error: 'Missing password' });
+      return;
+    }
+    const user = await (await dbClient.usersCollection()).findOne({ email });
+
+    if (user) {
+      res.status(400).json({ error: 'Already exist' });
+      return;
+    }
+    const insertionInfo = await (await dbClient.usersCollection())
+      .insertOne({ email, password: sha1(password) });
+    const userId = insertionInfo.insertedId.toString();
+
+    userQueue.add({ userId });
+    res.status(201).json({ email, id: userId });
   }
 
-  static async getDisconnect(req, res) {
-    const token = req.headers['x-token'];
+  static async getMe(req, res) {
+    const { user } = req;
 
-    await redisClient.del(`auth_${token}`);
-    res.status(204).send();
+    res.status(200).json({ email: user.email, id: user._id.toString() });
   }
 }
